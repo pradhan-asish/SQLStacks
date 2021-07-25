@@ -1,0 +1,95 @@
+1.Write a query identifying the type of each record in the TRIANGLES table using its three side lengths. Output one of the following statements for each record in the table:
+
+Equilateral: It's a triangle with  sides of equal length.
+Isosceles: It's a triangle with  sides of equal length.
+Scalene: It's a triangle with  sides of differing lengths.
+Not A Triangle: The given values of A, B, and C don't form a triangle.
+
+Ans:
+
+Select case when t.A = t.B AND t.B = t.c THEN
+                'Equilateral'
+            when (t.A = t.B  OR t.B = t.c OR t.A=t.C) AND t.A + t.B > t.c AND t.A + t.C > t.B AND t.C + t.B > t.A THEN    
+                'Isosceles'
+            when t.A + t.B > t.c AND t.A + t.C > t.B AND t.C + t.B > t.A THEN  
+                'Scalene'
+            ELSE
+            'Not A Triangle'
+            END Triangle
+from Triangles t ;
+
+
+
+2.Generate the following two result sets:
+
+Query an alphabetically ordered list of all names in OCCUPATIONS, immediately followed by the first letter of each profession as a parenthetical (i.e.: enclosed in parentheses). For example: AnActorName(A), ADoctorName(D), AProfessorName(P), and ASingerName(S).
+Query the number of ocurrences of each occupation in OCCUPATIONS. Sort the occurrences in ascending order, and output them in the following format:
+
+There are a total of [occupation_count] [occupation]s.
+where [occupation_count] is the number of occurrences of an occupation in OCCUPATIONS and [occupation] is the lowercase occupation name. If more than one Occupation has the same [occupation_count], they should be ordered alphabetically.
+
+Ans:
+
+
+
+MySQL
+----------
+SET @d=0,@a=0,@p=0,@s=0; 
+
+SELECT MIN(Doctor),MIN(Professor),MIN(SINGER),MIN(Actor) FROM
+
+(SELECT IF(OCCUPATION='Actor',NAME,NULL) AS Actor, IF(OCCUPATION='Doctor',NAME,NULL) AS Doctor, IF(OCCUPATION='Professor',NAME,NULL) AS Professor, IF(OCCUPATION='Singer',NAME,NULL) AS SINGER, case OCCUPATION when 'ACTOR' THEN @a:=@a+1 when 'Doctor' THEN @d:=@d+1 when 'Professor' THEN @p:=@p+1 when 'Singer' THEN @s:=@s+1 end as idn FROM OCCUPATIONS ORDER BY NAME ) AS TMP GROUP BY TMP.idn ;
+
+
+Oracle
+-------
+Select  min(Doctor),min(Professor),min(Singer), min(Actor)  FROM
+(Select Actor, DOCTOR ,SINGER ,PROFESSOR , r row_num FROM
+(Select Name Actor,'' DOCTOR, '' SINGER, '' PROFESSOR , rownum r from (Select k.Name  from OCCUPATIONS k where k.Occupation = 'Actor' order by k.Name)
+UNION
+Select '' Actor, Name DOCTOR, '' SINGER, '' PROFESSOR ,  rownum r from (Select k.Name  from OCCUPATIONS k where k.Occupation = 'Doctor' order by k.Name)
+UNION
+Select '' Actor,'' DOCTOR, Name SINGER,'' PROFESSOR ,  rownum r from (Select k.Name  from OCCUPATIONS k where k.Occupation = 'Singer' order by k.Name)
+UNION
+Select '' Actor,'' DOCTOR,'' SINGER, Name PROFESSOR, rownum r from (Select k.Name  from OCCUPATIONS k where k.Occupation = 'Professor' order by k.Name) ) ) group by row_num order by row_num
+;
+
+
+
+3.
+Amber's conglomerate corporation just acquired some new companies. Each of the companies follows this hierarchy:
+
+Given the table schemas below, write a query to print the company_code, founder name, total number of lead managers, total number of senior managers, total number of managers, and total number of employees. Order your output by ascending company_code.
+
+Note:
+
+The tables may contain duplicate records.
+The company_code is string, so the sorting should not be numeric. For example, if the company_codes are C_1, C_2, and C_10, then the ascending company_codes will be C_1, C_10, and C_2
+
+Ans:
+
+Select distinct com.company_code , com.founder , lm_count , sm_count, m_count, e_count from Company com ,
+(Select count(distinct lm.lead_manager_code) lm_count , lm.company_code from Lead_Manager lm group by lm.company_code) lm ,
+(Select count(distinct sm.senior_manager_code) sm_count , sm.company_code from Senior_Manager sm group by sm.company_code) sm ,
+(Select count(distinct m.manager_code) m_count, m.company_code from Manager m group by m.company_code) m ,
+(Select count(distinct Em.employee_code) e_count , Em.company_code from Employee Em group by Em.company_code) Em 
+where com.company_code = lm.company_code(+)
+AND com.company_code = sm.company_code(+)
+AND com.company_code = m.company_code(+)
+AND com.company_code = Em.company_code(+)
+ORDER BY com.company_code ;
+
+
+4.Consider  and  to be two points on a 2D plane.
+
+ happens to equal the minimum value in Northern Latitude (LAT_N in STATION).
+ happens to equal the minimum value in Western Longitude (LONG_W in STATION).
+ happens to equal the maximum value in Northern Latitude (LAT_N in STATION).
+ happens to equal the maximum value in Western Longitude (LONG_W in STATION).
+Query the Manhattan Distance between points  and  and round it to a scale of  decimal places.
+
+Input Format
+
+The STATION table is described as follows:
+
+Ans:select round(abs(min(lat_n)-max(lat_n))+abs(min(long_w)-max(long_w)),4) from station;

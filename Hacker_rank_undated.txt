@@ -1,0 +1,54 @@
+2.Query the list of CITY names from STATION which have vowels (i.e., a, e, i, o, and u) as both their first and last characters. Your result cannot contain duplicates.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Select distinct k.city from station k where (k.city like '%a' or k.city like '%e' or k.city like '%i' or k.city like '%o' or k.city like '%u')   
+AND (k.city like 'A%' or k.city like 'E%' or k.city like 'I%' or k.city like 'O%' or k.city like 'U%');
+
+3.Query the list of CITY names from STATION that do not start with vowels. Your result cannot contain duplicates.
+------------------------------------------------------------------------------------------------------------------
+Select distinct k1.city from station k1 where Not exists
+(Select k.id from station k where k.id=k1.id and
+(k.city  like 'A%' or k.city  like 'E%' or k.city  like 'I%' or k.city  like 'O%' or k.city like 'U%'));
+
+
+4.Query the list of CITY names from STATION that do not end with vowels. Your result cannot contain duplicates.
+----------------------------------------------------------------------------------------------------------------
+Select distinct k1.city from station k1 where Not exists
+(Select k.id from station k where k.id=k1.id and
+(k.city like '%a' or k.city like '%e' or k.city like '%i' or k.city like '%o' or k.city like '%u'));
+
+5.Query the list of CITY names from STATION that either do not start with vowels or do not end with vowels. Your result cannot contain duplicates.
+----------------------------------------------------------------------------------------------------------------
+Select distinct k1.city from station k1 where Not exists
+(Select k.id from station k where k.id=k1.id and
+(k.city like '%a' or k.city like '%e' or k.city like '%i' or k.city like '%o' or k.city like '%u') and (k.city  like 'A%' or k.city  like 'E%' or k.city  like 'I%' or k.city  like 'O%' or k.city like 'U%'));
+
+6.Query the list of CITY names from STATION that do not start with vowels and do not end with vowels. Your result cannot contain duplicates.
+----------------------------------------------------------------------------------------------------------------
+
+Select distinct k1.city from station k1 where Not exists
+(Select k.id from station k where k.id=k1.id and
+((k.city like '%a' or k.city like '%e' or k.city like '%i' or k.city like '%o' or k.city like '%u') OR (k.city  like 'A%' or k.city  like 'E%' or k.city  like 'I%' or k.city  like 'O%' or k.city like 'U%')));
+
+
+
+7.Query the Name of any student in STUDENTS who scored higher than  Marks. Order your output by the last three characters of each name. If two or more students both have names ending in the same last three characters (i.e.: Bobby, Robby, etc.), secondary sort them by ascending ID.
+----------------------------------------------------------------------------------------------------------------
+
+Select  k.name  From students k 
+where k.marks > 75 
+order by substr(k.name , length(k.name) - 2, length(k.name));
+
+
+8.Query the two cities in STATION with the shortest and longest CITY names, as well as their respective lengths (i.e.: number of characters in the name). If there is more than one smallest or largest city, choose the one that comes first when ordered alphabetically.
+----------------------------------------------------------------------------------------------------------------
+
+Select * from (Select k.city, length(k.city) length from station k where length(k.city) IN (Select min(length(t.city)) from station t) order by k.city  )   where rownum =1
+UNION
+Select * from (Select k.city, length(k.city) length from station k where length(k.city) IN (Select max(length(t.city)) from station t ) order by k.city )  where rownum =1;
+
+9.You are given a table, BST, containing two columns: N and P, where N represents the value of a node in Binary Tree, and P is the parent of N.
+----------------------------------------------------------------------------------------------------------------
+Select k.n, case WHEN k.P IS NULL THEN 'Root'
+                WHEN k.n IN (SELECT t.p FROM BST t) THEN 'Inner'
+                ELSE 'Leaf' END  from BST k order by k.n ;
+
