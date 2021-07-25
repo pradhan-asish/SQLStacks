@@ -1,1 +1,1 @@
-# SQLStacks
+--Universal SQL Queries to be uploaded
