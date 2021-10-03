@@ -27,4 +27,6 @@ Select * from p_Table.Worker;
 
 Alter table p_Table.Worker add column mobile_num int ;
 
+Select * from p_Table.Worker;
 
+Select distinct department from p_Table.Worker;
