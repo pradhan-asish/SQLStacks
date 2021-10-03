@@ -8,9 +8,7 @@ CREATE TABLE p_Table.Worker (
  DEPARTMENT CHAR(25)
 );
 
-
 Select * from p_Table.Worker;
-
 
 INSERT INTO p_Table.Worker 
  (WORKER_ID, FIRST_NAME, LAST_NAME, SALARY, JOINING_DATE, DEPARTMENT) VALUES
@@ -30,3 +28,17 @@ Alter table p_Table.Worker add column mobile_num int ;
 Select * from p_Table.Worker;
 
 Select distinct department from p_Table.Worker;
+
+SELECT SUM(SALARY) FROM p_Table.Worker WHERE DEPARTMENT = 'HR' ;
+SELECT SUM(SALARY) FROM p_Table.Worker WHERE DEPARTMENT = 'Admin' ;
+SELECT SUM(SALARY) FROM p_Table.Worker WHERE DEPARTMENT = 'Account' ;
+
+SELECT DEPARTMENT,SUM(SALARY) FROM p_Table.Worker WHERE Department not in ('Account') GROUP BY DEPARTMENT ;
+
+SELECT DEPARTMENT,SUM(SALARY) FROM p_Table.Worker  GROUP BY DEPARTMENT having Department not in ('Account');
+
+SELECT DEPARTMENT,avg(SALARY) FROM p_Table.Worker   GROUP BY DEPARTMENT  Having avg(SALARY) > 250000;
+
+SELECT DEPARTMENT,SUM(SALARY) FROM p_Table.Worker WHERE Department not in ('Account') GROUP BY DEPARTMENT ;
+
+
